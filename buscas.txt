@@ -1,0 +1,125 @@
+alunos: Marcos Paulo Souza de Oliveria, Dyan gabriel
+
+Consultas SQL
+Diversas queries foram implementadas para gerar relatórios e consultar o banco de dados de forma eficiente. Aqui estão algumas das principais consultas:
+
+
+
+**Alterar eventuais cadastros de professores cuja titulação esteja como "Mestre" para "Mestrado":**
+
+UPDATE Professor  
+SET titulacao = 'Mestrado'  
+WHERE titulacao = 'Mestre';
+
+---
+
+**Excluir os períodos letivos de anos anteriores a 2023:**
+
+DELETE FROM Periodo  
+WHERE EXTRACT(YEAR FROM dataInicio) < 2023;
+
+---
+
+### Consultas Solicitadas:
+
+**Listar todas as alunas (sexo 'F') em ordem alfabética (ra, nome e e-mail):**
+
+SELECT ra, nome, email  
+FROM Aluno  
+WHERE sexo = 'F'  
+ORDER BY nome ASC;
+
+---
+
+**Listar todos os professores que não têm titulação preenchida:**
+
+SELECT id, nome, cpf  
+FROM Professor  
+WHERE titulacao IS NULL OR titulacao = '';
+
+---
+
+**Relatório de alunos matriculados em curso de "Matematica Basica" (ra, nome, cpf, data de matrícula):**
+
+SELECT A.ra, A.nome, A.cpf, M.dataMatricula, C.nome AS curso, C.cargaHoraria  
+FROM Matricula M  
+JOIN Aluno A ON M.raAluno = A.ra  
+JOIN Curso C ON M.idCurso = C.id  
+WHERE C.nome = 'Inglês Intermediário';
+
+---
+
+**Listar cursos, carga horária, valor, nome e titulação do professor de todos os cursos ofertados no período 2023-01-15 a 2023-06-30:**
+
+SELECT C.nome AS curso, C.cargaHoraria, C.valor, P.nome AS professor, P.titulacao  
+FROM Curso C  
+JOIN Professor P ON C.id = P.id  
+JOIN Periodo Pe ON C.id = Pe.id  
+WHERE Pe.dataInicio = '2023-01-15' AND Pe.dataFim = '2023-06-30';
+
+---
+
+**Listar todos os alunos (nome e e-mail) de um professor específico, "Carlos Almeida":**
+
+SELECT A.nome, A.email  
+FROM Matricula M  
+JOIN Aluno A ON M.raAluno = A.ra  
+JOIN Curso C ON M.idCurso = C.id  
+JOIN Professor P ON C.id = P.id  
+WHERE P.nome = 'Carlos Almeida';
+
+---
+
+**Gerar boletim dos alunos aprovados (ra, nome, cpf, nome do curso, nota final, resultado final):**
+
+SELECT A.ra, A.nome, A.cpf, C.nome AS curso, M.nf, M.resultado  
+FROM Matricula M  
+JOIN Aluno A ON M.raAluno = A.ra  
+JOIN Curso C ON M.idCurso = C.id  
+WHERE M.resultado = 'Aprovado';
+
+---
+
+**Listar a quantidade de alunos por curso no período 2023-01-15 a 2023-06-30:**
+
+SELECT C.nome AS curso, COUNT(M.raAluno) AS total_alunos  
+FROM Matricula M  
+JOIN Curso C ON M.idCurso = C.id  
+JOIN Periodo Pe ON C.id = Pe.id  
+WHERE Pe.dataInicio = '2023-01-15' AND Pe.dataFim = '2023-06-30'  
+GROUP BY C.nome;
+
+---
+
+**Informar o valor do curso mais caro, do curso mais barato e o valor médio dos cursos:**
+
+SELECT MAX(valor) AS curso_mais_caro, MIN(valor) AS curso_mais_barato, AVG(valor) AS valor_medio  
+FROM Curso;
+
+---
+
+**Informar o ticket médio dos cursos no período 2023-01-15 a 2023-06-30:**
+
+SELECT AVG(C.valor) AS ticket_medio  
+FROM Curso C  
+JOIN Periodo Pe ON C.id = Pe.id  
+WHERE Pe.dataInicio = '2023-01-15' AND Pe.dataFim = '2023-06-30';
+
+---
+
+**Listar nome e CPF de professores que nunca foram alunos:**
+
+SELECT P.nome, P.cpf  
+FROM Professor P  
+WHERE NOT EXISTS (SELECT 1 FROM Matricula M JOIN Aluno A ON M.raAluno = A.ra WHERE A.cpf = P.cpf);
+
+---
+
+**Listar a quantidade de alunos do sexo masculino e feminino matriculados em cursos com valor acima do valor médio:**
+
+SELECT A.sexo, COUNT(A.ra) AS total_alunos  
+FROM Matricula M  
+JOIN Aluno A ON M.raAluno = A.ra  
+JOIN Curso C ON M.idCurso = C.id  
+WHERE C.valor > (SELECT AVG(valor) FROM Curso)  
+GROUP BY A.sexo;

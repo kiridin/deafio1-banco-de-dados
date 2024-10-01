@@ -1,0 +1,57 @@
+alunos: Marcos Paulo Souza de Oliveria, Dyan gabriel
+
+Título: Projeto de Sistema Acadêmico – Diagrama UML e Banco de Dados SQL
+1. Introdução
+Este projeto foi desenvolvido com o objetivo de modelar e implementar um sistema acadêmico para a nova área de negócios do centro universitário, voltada para cursos rápidos de formação 
+complementar e especialização. O projeto é composto por duas partes: o diagrama de classes UML e a implementação do banco de dados em PostgreSQL. 
+Ambos foram desenvolvidos com base nos requisitos fornecidos.
+
+2. Diagrama de Classes UML
+O diagrama de classes UML foi desenvolvido para modelar a estrutura do sistema, identificando as principais entidades e seus relacionamentos. As classes principais do sistema são:
+
+Aluno: Representa os dados básicos dos estudantes, como RA, nome, CPF, data de nascimento, sexo, escolaridade e e-mail.
+Professor: Armazena as informações dos professores, incluindo ID, nome, CPF, data de nascimento, sexo, titulação e e-mail.
+Curso: Representa os cursos oferecidos pela instituição, com nome, valor, carga horária, status (ativo/inativo), professor responsável e período em que o curso é ofertado.
+Período: Define os períodos letivos, com data de início e data de fim.
+Matrícula: Registra a matrícula dos alunos nos cursos, incluindo notas (N1, N2), nota final (NF) e resultado (aprovado/reprovado).
+Associações Importantes:
+
+Um Aluno pode ter várias Matrículas (relação 1).
+Um Professor pode ser responsável por vários Cursos (relação 1).
+Um Curso só pode ser ofertado em um único Período, mas vários cursos podem ser ofertados no mesmo período (relação 1).
+Um Aluno pode estar matriculado em vários Cursos através da Matrícula.
+
+3. Implementação do Banco de Dados (PostgreSQL)
+O banco de dados foi implementado utilizando o PostgreSQL, respeitando todas as constraints necessárias para garantir a integridade dos dados.
+
+3.1 Tabelas Criadas
+Aluno: Contém os dados dos alunos, incluindo um campo para o e-mail, obrigatório para cada aluno.
+Professor: Registra os professores com seus dados, também com e-mail obrigatório.
+Curso: Representa os cursos oferecidos e inclui informações como valor e status.
+Período: Define os períodos letivos, com data de início e fim.
+Matrícula: Armazena as informações das matrículas dos alunos, incluindo notas e resultados.
+
+3.2 Constraints
+Chaves Primárias: RA (Aluno), ID (Professor), ID (Curso), ID (Período).
+Chaves Estrangeiras: O relacionamento entre as tabelas foi feito por meio de chaves estrangeiras. Por exemplo, a tabela Matrícula contém chaves estrangeiras referenciando as tabelas Aluno e 
+Curso.
+Índices: Foram criados índices para otimizar a busca por CPF nas tabelas Aluno e Professor.
+
+4. Inserção de Dados
+Foram inseridos múltiplos registros para simular um ambiente real. Isso inclui:
+
+alunos, com suas informações básicas.
+professores, incluindo suas titulações.
+cursos, com diferentes valores e cargas horárias.
+períodos letivos, abrangendo os últimos anos.
+Matrículas de alunos nos cursos, com notas e resultados calculados.
+
+
+5. Destaques do Projeto
+Atualização de Titulação: Foi implementada a atualização automática da titulação de professores de "Mestre" para "Mestrado" quando necessário.
+Exclusão de Períodos Anteriores a 2023: Foram removidos os registros de períodos letivos que ocorreram antes de 2023.
+Consultas Otimizadas: Todas as consultas foram otimizadas com o uso de índices em campos críticos como CPF, garantindo performance.
+
+6. Conclusão
+O projeto foi desenvolvido com base em boas práticas de modelagem de dados e organização de código SQL, garantindo uma estrutura robusta e eficiente para o sistema acadêmico proposto.
+A modelagem UML e a implementação no PostgreSQL atendem aos requisitos apresentados, oferecendo uma solução completa para a gestão de alunos, professores, cursos e matrículas.
